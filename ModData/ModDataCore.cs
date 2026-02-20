@@ -6,12 +6,15 @@ internal class ModDataCore
 {
 	internal static string modDataFolderName { get; } = "ModData";
 	internal static string modDataFileExt { get; } = ".moddata";
+	internal static string profileDataFilePrefix { get; } = "profile";
 	internal static string modDataRoot { get; private set; } = "";
 
 	internal static string? modDataSaveSlotName { get; private set; } = null;
 	internal static string? modDataSaveSlotFile { get; private set; } = null;
+	internal static string? profileDataFile { get; private set; } = null;
 
 	internal static Dictionary<string, string> dataCache = new();
+	internal static Dictionary<string, string> profileCache = new();
 
 	internal static bool initComplete = false;
 	internal static bool cacheLoaded = false;
@@ -114,6 +117,33 @@ internal class ModDataCore
 		return true;
 	}
 
+
+	internal static bool WriteEntryProfile(string entryName, string entryData, string? entrySuffix = null)
+    {
+        if (entrySuffix != null)
+        {
+            entryName += "_" + entrySuffix;
+        }
+
+        if (profileCache.ContainsKey(entryName) && profileCache[entryName] == entryData)
+        {
+//			DebugMsg($"WriteEntry: {entryName} {entryData.Length} NO CHANGE");
+            return true;
+        }
+
+        if (profileCache.ContainsKey(entryName))
+        {
+            profileCache.Remove(entryName);
+        }
+
+        profileCache.Add(entryName, entryData);
+//		DebugMsg($"WriteEntry: {entryName} {entryData.Length} {entryData.Trim().Length}");
+
+        cacheChanged = true;
+        return true;
+    }
+
+
 	internal static string? ReadEntry(string entryName, string? entrySuffix = null)
 	{
 		if (entrySuffix != null)
@@ -134,7 +164,45 @@ internal class ModDataCore
 		return null;
 	}
 
-	internal static void LoadCache()
+
+    internal static string? ReadFromProfile(string entryName, string? entrySuffix = null)
+    {
+        if (entrySuffix != null)
+        {
+            entryName += "_" + entrySuffix;
+        }
+
+        if (profileCache.ContainsKey(entryName))
+        {
+            return profileCache[entryName];
+        }
+
+        return null;
+    }
+
+    internal static void LoadProfile()
+    {
+        profileDataFile = Path.Combine(modDataRoot, profileDataFilePrefix + modDataFileExt);
+        
+		Stopwatch sw = new Stopwatch();
+        sw.Start();
+
+        Dictionary<string, string> profileEntries = ZipUtils.ReadEntries(profileDataFile);
+        foreach (var entry in profileEntries)
+        {
+            //			DebugMsg("Profile Cache Loaded (" + entry.Key + ")");
+            if (entry.Value != null)
+            {
+                profileCache.Add(entry.Key, entry.Value);
+            }
+        }
+
+        cacheLoaded = true;
+        sw.Stop();
+        DebugMsg($"Profile Loaded ({profileEntries.Count}) ({sw.ElapsedMilliseconds}ms)");
+    }
+
+    internal static void LoadCache()
 	{
 		Stopwatch sw = new Stopwatch();
 		sw.Start();
@@ -149,7 +217,7 @@ internal class ModDataCore
 			}
 		}
 
-		cacheLoaded = true;
+        cacheLoaded = true;
 		sw.Stop();
 		DebugMsg($"Cache Loaded ({entries.Count}) ({sw.ElapsedMilliseconds}ms)");
 	}
@@ -171,8 +239,12 @@ internal class ModDataCore
 		{
 			ZipUtils.WriteEntries(modDataSaveSlotFile, dataCache);
         }
+        if (profileCache != null && profileCache.Count > 0)
+        {
+            ZipUtils.WriteEntries(profileDataFile, profileCache);
+        }
         sw.Stop();
-		DebugMsg($"Cache Saved ({dataCache.Count}) ({sw.ElapsedMilliseconds}ms)");
+		DebugMsg($"Cache Saved ({dataCache.Count + profileCache.Count}) ({sw.ElapsedMilliseconds}ms)");
 		cacheChanged = false;
 	}
 

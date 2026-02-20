@@ -1,6 +1,6 @@
-# ModData 1.5.0
+# ModData 1.6.0
 
-TLD utility mod for saving/loading custom mod savegame data
+TLD utility mod for saving/loading custom mod savegame and profile data
 
 ***
 * Simple usage
@@ -8,9 +8,11 @@ TLD utility mod for saving/loading custom mod savegame data
 * Only allows load/save while a save game is active
 * Uses an internal cache to reduce disk read/writes
 * Deletes associated .moddata file when the save is deleted
+* Now includes persistent profile data storage as well, so you can store data that will persist between savegames like feat or custom achievement progress
 * [Example File](./example/)
 ---
-* default file = \\Mods\\ModData\\**slotName**.moddata (.zip file)
+* default file (savegame) = \\Mods\\ModData\\**slotName**.moddata (.zip file)
+* default file (profile) = \\Mods\\ModData\\profile.moddata (.zip file)
 * default entry filename = **modName**
 * suffix entry filename = **modName**_**Suffix**
 
@@ -25,10 +27,12 @@ ModDataManager dataManager = new ModDataManager(string modName, [bool debug = fa
 ```cs
 bool dataManager.Save(string data) 
 bool dataManager.Save(string data, string? suffix)
+bool dataManager.SaveToProfile(string data, string? suffix = null)
 ```
 ```cs
 string? dataManager.Load() 
 string? dataManager.Load(string? suffix)
+string? dataManager.LoadFromProfile(string? suffix = null)
 ```
 
 ## Installation

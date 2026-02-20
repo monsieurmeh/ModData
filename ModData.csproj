@@ -28,14 +28,14 @@
 	<!--This is for NuGet.-->
 	<PropertyGroup>
 		<Authors>STBlade</Authors>
-		<Version>1.5.3</Version>
-		<AssemblyVersion>1.5.3</AssemblyVersion>
+		<Version>1.6.0</Version>
+		<AssemblyVersion>1.6.0</AssemblyVersion>
 		<PackageId>stblade.Modding.TLD.ModData</PackageId>
 		<PackageTags>MelonLoader Modding TLD Custom Save Game Data Utility</PackageTags>
-		<RepositoryUrl>https://github.com/dommrogers/ModData</RepositoryUrl>
+		<RepositoryUrl>https://github.com/monsieurmeh/ModData</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
-		<PackageProjectUrl>https://github.com/dommrogers/ModData</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/monsieurmeh/ModData</PackageProjectUrl>
 		<Description>TLD utility mod for saving/loading custom mod savegame data</Description>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
