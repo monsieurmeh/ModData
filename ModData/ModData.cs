@@ -12,4 +12,9 @@ internal sealed class Main : MelonMod
 		MelonLogger.Msg("ModData Initialized - " + BuildInfo.ModVersion);
 	}
 
+
+    public override void OnLateInitializeMelon()
+    {
+		ModDataCore.LoadProfile();
+    }
 }

@@ -26,6 +26,15 @@ public class ModDataManager
 		return saved;
 	}
 
+    public bool SaveToProfile(string data, string? suffix = null)
+    {
+        if (currentModName == null)
+        {
+            throw new ArgumentNullException(nameof(currentModName));
+        }
+        return ModDataCore.WriteEntryProfile(currentModName, data, suffix);
+    }
+	
 	public string? Load()
 	{
 		return Load(null);
@@ -41,4 +50,12 @@ public class ModDataManager
 	}
 
 
+    public string? LoadFromProfile(string? suffix = null)
+    {
+        if (currentModName == null)
+        {
+            throw new ArgumentNullException(nameof(currentModName));
+        }
+        return ModDataCore.ReadFromProfile(currentModName, suffix);
+    }
 }
