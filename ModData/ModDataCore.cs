@@ -198,7 +198,6 @@ internal class ModDataCore
             }
         }
 
-        cacheLoaded = true;
         sw.Stop();
         DebugMsg($"Profile Loaded ({profileEntries.Count}) ({sw.ElapsedMilliseconds}ms)");
     }

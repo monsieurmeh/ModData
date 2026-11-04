@@ -1,4 +1,4 @@
-# ModData 1.6.1
+# ModData 1.6.2
 
 TLD utility mod for saving/loading custom mod savegame and profile data
 
