@@ -203,19 +203,37 @@ internal class ModDataCore
 		Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        Dictionary<string, string> profileEntries = ZipUtils.ReadEntries(profileDataFile);
-        foreach (var entry in profileEntries)
+        try
         {
-            //			DebugMsg("Profile Cache Loaded (" + entry.Key + ")");
-            if (entry.Value != null)
+            Dictionary<string, string> profileEntries = ZipUtils.ReadEntries(profileDataFile);
+            foreach (var entry in profileEntries)
             {
-                profileCache.Add(entry.Key, entry.Value);
+                //			DebugMsg("Profile Cache Loaded (" + entry.Key + ")");
+                if (entry.Value != null)
+                {
+                    profileCache.Add(entry.Key, entry.Value);
+                }
             }
+            DebugMsg($"Profile Loaded ({profileEntries.Count}) ({sw.ElapsedMilliseconds}ms)");
+        }
+        catch (Exception e)
+        {
+            ZipUtils.CloseArchive();
+            profileCache.Clear();
+            string aside = profileDataFile + ".unreadable";
+            try
+            {
+                File.Move(profileDataFile, aside, true);
+            }
+            catch (Exception moveException)
+            {
+                MelonLoader.MelonLogger.Warning($"Profile: could not move the unreadable profile aside: {moveException.Message}");
+            }
+            MelonLoader.MelonLogger.Warning($"Profile: {Path.GetFileName(profileDataFile)} could not be read ({e.GetType().Name}: {e.Message}), kept as {Path.GetFileName(aside)}; starting an empty profile");
         }
 
         profileLoaded = true;
         sw.Stop();
-        DebugMsg($"Profile Loaded ({profileEntries.Count}) ({sw.ElapsedMilliseconds}ms)");
     }
 
     internal static void LoadCache()
