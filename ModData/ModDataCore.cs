@@ -20,6 +20,8 @@ internal class ModDataCore
 	internal static bool cacheLoaded = false;
 	internal static bool cacheChanged = false;
 
+	internal static bool profileLoaded = false;
+
 	internal static void InitModDataCore(string saveName)
 	{
 		if (initComplete && cacheLoaded)
@@ -124,6 +126,10 @@ internal class ModDataCore
         {
             entryName += "_" + entrySuffix;
         }
+        if (!profileLoaded)
+        {
+            LoadProfile();
+        }
 
         if (profileCache.ContainsKey(entryName) && profileCache[entryName] == entryData)
         {
@@ -171,6 +177,10 @@ internal class ModDataCore
         {
             entryName += "_" + entrySuffix;
         }
+        if (!profileLoaded)
+        {
+            LoadProfile();
+        }
 
         if (profileCache.ContainsKey(entryName))
         {
@@ -182,6 +192,10 @@ internal class ModDataCore
 
     internal static void LoadProfile()
     {
+        if (profileLoaded)
+        {
+            return;
+        }
         InitModDataRoot();
         profileDataFile = Path.Combine(modDataRoot, profileDataFilePrefix + modDataFileExt);
         
@@ -198,6 +212,7 @@ internal class ModDataCore
             }
         }
 
+        profileLoaded = true;
         sw.Stop();
         DebugMsg($"Profile Loaded ({profileEntries.Count}) ({sw.ElapsedMilliseconds}ms)");
     }

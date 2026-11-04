@@ -28,8 +28,8 @@
 	<!--This is for NuGet.-->
 	<PropertyGroup>
 		<Authors>STBlade</Authors>
-		<Version>1.6.2</Version>
-		<AssemblyVersion>1.6.2</AssemblyVersion>
+		<Version>1.6.3</Version>
+		<AssemblyVersion>1.6.3</AssemblyVersion>
 		<PackageId>stblade.Modding.TLD.ModData</PackageId>
 		<PackageTags>MelonLoader Modding TLD Custom Save Game Data Utility</PackageTags>
 		<RepositoryUrl>https://github.com/monsieurmeh/ModData</RepositoryUrl>
