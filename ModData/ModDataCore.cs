@@ -182,6 +182,7 @@ internal class ModDataCore
 
     internal static void LoadProfile()
     {
+        InitModDataRoot();
         profileDataFile = Path.Combine(modDataRoot, profileDataFilePrefix + modDataFileExt);
         
 		Stopwatch sw = new Stopwatch();
