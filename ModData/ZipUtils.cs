@@ -142,8 +142,8 @@ internal class ZipUtils
 	internal static void CloseArchive()
 	{
 //		ModDataCore.DebugMsg($"CloseArchive");
-		zipArchive.Dispose();
-		fileStream.Dispose();
+		zipArchive?.Dispose();
+		fileStream?.Dispose();
 		zipArchive = null;
 		fileStream = null;
 	}

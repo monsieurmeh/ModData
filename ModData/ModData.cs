@@ -17,4 +17,9 @@ internal sealed class Main : MelonMod
     {
 		ModDataCore.LoadProfile();
     }
+
+	public override void OnApplicationQuit()
+	{
+		ModDataCore.SaveProfile();
+	}
 }

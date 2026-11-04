@@ -21,6 +21,7 @@ internal class ModDataCore
 	internal static bool cacheChanged = false;
 
 	internal static bool profileLoaded = false;
+	internal static bool profileChanged = false;
 
 	internal static void InitModDataCore(string saveName)
 	{
@@ -145,7 +146,7 @@ internal class ModDataCore
         profileCache.Add(entryName, entryData);
 //		DebugMsg($"WriteEntry: {entryName} {entryData.Length} {entryData.Trim().Length}");
 
-        cacheChanged = true;
+        profileChanged = true;
         return true;
     }
 
@@ -239,6 +240,7 @@ internal class ModDataCore
 
 	internal static void SaveCache()
 	{
+		SaveProfile();
 		if (!cacheLoaded)
 		{
 //			DebugMsg("SaveCache: No Cache.");
@@ -254,13 +256,34 @@ internal class ModDataCore
 		{
 			ZipUtils.WriteEntries(modDataSaveSlotFile, dataCache);
         }
-        if (profileCache != null && profileCache.Count > 0)
-        {
-            ZipUtils.WriteEntries(profileDataFile, profileCache);
-        }
         sw.Stop();
-		DebugMsg($"Cache Saved ({dataCache.Count + profileCache.Count}) ({sw.ElapsedMilliseconds}ms)");
+		DebugMsg($"Cache Saved ({dataCache.Count}) ({sw.ElapsedMilliseconds}ms)");
 		cacheChanged = false;
+	}
+
+	internal static void SaveProfile()
+	{
+		if (!profileLoaded || !profileChanged || profileDataFile == null)
+		{
+			return;
+		}
+		Stopwatch sw = new Stopwatch();
+		sw.Start();
+		try
+		{
+			if (profileCache.Count > 0)
+			{
+				ZipUtils.WriteEntries(profileDataFile, profileCache);
+			}
+			profileChanged = false;
+			sw.Stop();
+			DebugMsg($"Profile Saved ({profileCache.Count}) ({sw.ElapsedMilliseconds}ms)");
+		}
+		catch (Exception e)
+		{
+			ZipUtils.CloseArchive();
+			MelonLoader.MelonLogger.Warning($"Profile: could not save {Path.GetFileName(profileDataFile)} ({e.GetType().Name}: {e.Message})");
+		}
 	}
 
 	internal static void DebugMsg(string msg)

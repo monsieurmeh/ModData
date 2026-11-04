@@ -49,6 +49,15 @@ internal class ModDataPatches
 		}
 	}
 
+	[HarmonyPatch(typeof(SaveGameSystem), nameof(SaveGameSystem.SaveProfile))]
+	private static class ModData_SaveGameSystem_SaveProfile
+	{
+		private static void Postfix()
+		{
+			ModDataCore.SaveProfile();
+		}
+	}
+
 	[HarmonyPatch(typeof(GameManager), nameof(GameManager.DoExitToMainMenu))]
 	[HarmonyPatch(typeof(GameManager), nameof(GameManager.LoadMainMenu))]
 //	[HarmonyPatch(typeof(GameManager), nameof(GameManager.AsyncLoadMainMenu))]
